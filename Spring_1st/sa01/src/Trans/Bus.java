@@ -3,12 +3,13 @@ package Trans;
 class Bus extends Transport {
     String status;
     int pay;
-    Bus(int fuel_volume,int take_pass, int current_pass, int speed){
-        super(fuel_volume, take_pass, current_pass, speed);
+    Bus(int num, int take_pass, int current_pass, int speed){
+        super(num, take_pass, current_pass, speed);
         this.status = "운행중";
         this.pay = 1000;
         this.mx_pass = 30;
     }
+
     void take_bus(int i){
         take_pass = i;
         if (take_pass > 0){

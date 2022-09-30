@@ -1,7 +1,5 @@
 package Trans;
 
-import java.io.PrintWriter;
-
 class Taxi extends Transport {
     String status;
     int dist;
@@ -10,8 +8,8 @@ class Taxi extends Transport {
     int rate;
     int total;
     int acc;
-    Taxi(int fuel_volume,int take_pass, int current_pass, int speed){
-        super(fuel_volume, take_pass, current_pass, speed);
+    Taxi(int num,int take_pass, int current_pass, int speed){
+        super(num, take_pass, current_pass, speed);
         this.status = "일반";
         this.dist = dist;
         this.dest = dest;

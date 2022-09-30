@@ -22,6 +22,10 @@ class Transport {
         this.speed_ch = speed_ch;
     }
 
+    int get_number() {
+        return num;
+    }
+
     void drive() {
         if(fuel_volume < 10){
             System.out.println("주유 필요");
