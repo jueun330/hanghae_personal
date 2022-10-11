@@ -75,7 +75,4 @@ public class Member extends Timestamped {
         return passwordEncoder.matches(checkPassword, getPassword());
     }
 
-
-
-
 }

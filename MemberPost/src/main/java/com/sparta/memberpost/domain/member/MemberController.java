@@ -23,5 +23,4 @@ public class MemberController {
         return new CommonResponse(memberSignUpDto);
     }
 
-
 }

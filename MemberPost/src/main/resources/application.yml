@@ -1,9 +1,12 @@
 spring:
+  h2:
+    console:
+      enabled: true
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:jwtdb
     username: sa
-    password: 1
+    password:
 
 
   jpa:
@@ -30,3 +33,5 @@ logging:
 
       hibernate:
         SQL: debug
+server:
+  port: 8090
