@@ -1,11 +1,10 @@
 package com.sparta.memberpost.domain.member;
 
-import com.sparta.memberpost.global.CommonResponse;
+import com.sparta.memberpost.global.response.ResponseService;
+import com.sparta.memberpost.global.response.SingleResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -14,13 +13,20 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
 
-    @PostMapping("/signUp")
-    @ResponseStatus(HttpStatus.OK)
-    public CommonResponse signUp(@Valid @RequestBody MemberSignupDto memberSignUpDto) throws Exception {
-        memberService.signUp(memberSignUpDto);
-        return new CommonResponse(memberSignUpDto);
+    private final LoginService loginService;
+    private final ResponseService responseService;
+
+    @PostMapping("/signup")
+
+    public SingleResponse<Member> signUp(@RequestBody @Valid MemberSignupDto memberSignUpDto) throws Exception {
+        return responseService.getSingleResponse(memberService.signUp(memberSignUpDto));
+    }
+
+    @PostMapping("/login")
+    public SingleResponse<MemberInfoDto> login(@RequestBody MemberInfoDto memberInfoDto) throws Exception {
+        return responseService.getSingleResponse(memberInfoDto);
     }
 
 }

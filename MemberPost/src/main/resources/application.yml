@@ -26,6 +26,8 @@ spring:
 
 logging:
   level:
+    p6spy: debug
+
     org:
       apache:
         coyote:

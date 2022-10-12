@@ -1,27 +1,32 @@
 package com.sparta.memberpost.domain.post;
 
-import com.sparta.memberpost.global.CommonResponse;
+import com.sparta.memberpost.global.response.ListResponse;
+import com.sparta.memberpost.global.response.ResponseService;
+import com.sparta.memberpost.global.response.SingleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
+    private  final ResponseService responseService;
 
 
     /**
      * 게시글 저장
+     *
+     * @return
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/post")
-    public void save(@Valid @ModelAttribute PostSaveDto postSaveDto){
-        postService.save(postSaveDto);
+    public SingleResponse<Post> save(@Valid @ModelAttribute @RequestBody PostSaveDto postSaveDto){
+        return responseService.getSingleResponse(postService.save(postSaveDto));
+
     }
 
     /**
@@ -29,11 +34,10 @@ public class PostController {
      */
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/post/{postId}")
-    public void update(@PathVariable("postId") Long postId,
+    public SingleResponse<PostSaveDto> update(@PathVariable("postId") Long postId,
                        @ModelAttribute PostSaveDto postSaveDto){
-
-
         postService.update(postId, postSaveDto);
+        return responseService.getSingleResponse(postSaveDto);
     }
 
     /**
@@ -41,8 +45,9 @@ public class PostController {
      */
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/post/{postId}")
-    public void delete(@PathVariable("postId") Long postId){
+    public SingleResponse<String> delete(@PathVariable("postId") Long postId){
         postService.delete(postId);
+        return responseService.getSingleResponse("delete success");
     }
 
 
@@ -50,17 +55,12 @@ public class PostController {
      * 게시글 조회
      */
     @GetMapping("/post/{postId}")
-    public CommonResponse getInfo(@PathVariable("postId") Long postId){
-        return new CommonResponse(postService.getPostInfo(postId));
+    public SingleResponse<PostInfoDto> getInfo(@PathVariable("postId") Long postId){
+        return responseService.getSingleResponse(postService.getPostInfo(postId));
     }
 
     @GetMapping("/post/list")
-    public CommonResponse.ofList getInfoList(){
-        List<PostInfoDto> postInfoDtoList = postService.findAll();
-        return new CommonResponse.ofList(postInfoDtoList);
+    public ListResponse<PostInfoDto> getInfoList(){
+        return responseService.getListResponse(postService.findAll());
     }
-
-
-
-
 }

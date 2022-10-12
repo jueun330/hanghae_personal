@@ -31,13 +31,19 @@ public class WebSecurityConfig  {
     private final MemberRepository memberRepository;
     private final JwtService jwtService;
 
+
+    //PasswordEncoder 등록
     @Bean
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .headers().frameOptions().sameOrigin()
+                .and()
                 .formLogin().disable()
                 .httpBasic().disable()
                 .cors().disable()
@@ -58,7 +64,7 @@ public class WebSecurityConfig  {
     }
     @Bean
     public AuthenticationManager authenticationManager() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(); //비밀번호 검증
         provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(loginService);
         return new ProviderManager(provider);
@@ -66,7 +72,7 @@ public class WebSecurityConfig  {
 
     @Bean
     public LoginSuccessJWTProvideHandler loginSuccessJWTProvideHandler(){
-        return new LoginSuccessJWTProvideHandler(jwtService, memberRepository);//변경
+        return new LoginSuccessJWTProvideHandler(jwtService, memberRepository);
     }
 
     @Bean
@@ -79,7 +85,7 @@ public class WebSecurityConfig  {
         JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordLoginFilter = new JsonUsernamePasswordAuthenticationFilter(objectMapper);
         jsonUsernamePasswordLoginFilter.setAuthenticationManager(authenticationManager());
         jsonUsernamePasswordLoginFilter.setAuthenticationSuccessHandler(loginSuccessJWTProvideHandler());
-        jsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());//변경
+        jsonUsernamePasswordLoginFilter.setAuthenticationFailureHandler(loginFailureHandler());
         return jsonUsernamePasswordLoginFilter;
     }
 

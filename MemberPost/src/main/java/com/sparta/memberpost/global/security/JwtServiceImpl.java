@@ -2,6 +2,7 @@ package com.sparta.memberpost.global.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.memberpost.domain.member.MemberRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,27 @@ public class JwtServiceImpl implements JwtService{
     }
 
 
+
+
+    @Override
+    public void updateRefreshToken(String username, String refreshToken) {
+        memberRepository.findByUsername(username)
+                .ifPresentOrElse(
+                        member -> member.updateRefreshToken(refreshToken),
+                        () -> new Exception("회원이 없습니다")
+                );
+    }
+
+
+
+    @Override
+    public void destroyRefreshToken(String username) {
+        memberRepository.findByUsername(username)
+                .ifPresentOrElse(
+                        member -> member.destroyRefreshToken(),
+                        () -> new Exception("회원이 없습니다")
+                );
+    }
 
     @Override
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken){

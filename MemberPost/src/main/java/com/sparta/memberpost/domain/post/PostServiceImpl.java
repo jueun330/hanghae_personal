@@ -3,11 +3,9 @@ package com.sparta.memberpost.domain.post;
 import com.sparta.memberpost.domain.member.MemberException;
 import com.sparta.memberpost.domain.member.MemberExceptionType;
 import com.sparta.memberpost.domain.member.MemberRepository;
-import com.sparta.memberpost.global.CommonResponse;
+import com.sparta.memberpost.global.response.CommonResponse;
 import com.sparta.memberpost.global.security.SecurityUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,18 +25,19 @@ public class PostServiceImpl implements PostService {
     private CommonResponse commonResponse;
 
     @Override
-    public void save(PostSaveDto postSaveDto) {
+    public Post save(PostSaveDto postSaveDto) {
         Post post = postSaveDto.toEntity();
 
         post.confirmWriter(memberRepository.findByUsername(SecurityUtil.getLoginUsername())
                 .orElseThrow(() -> new MemberException(MemberExceptionType.NOT_FOUND_MEMBER)));
 
         postRepository.save(post);
+        return post;
     }
 
     @Override
     @Transactional
-    public void update(Long id, PostSaveDto postSaveDto) {
+    public Post update(Long id, PostSaveDto postSaveDto) {
         Post post = postRepository.findById(id).orElseThrow(() ->
                 new PostException(POST_NOT_POUND));
 
@@ -46,12 +45,12 @@ public class PostServiceImpl implements PostService {
 
         post.updateTitle(postSaveDto.getTitle());
         post.updateContent(postSaveDto.getContent());
-
+        return post;
     }
 
 
     @Override
-    public void delete(Long id) {
+    public Post delete(Long id) {
 
         Post post = postRepository.findById(id).orElseThrow(() ->
                 new PostException(POST_NOT_POUND));
@@ -59,7 +58,7 @@ public class PostServiceImpl implements PostService {
         checkAuthority(post, PostExceptionType.NOT_AUTHORITY_DELETE_POST);
 
         postRepository.delete(post);
-
+        return post;
     }
 
     private void checkAuthority(Post post, PostExceptionType postExceptionType) {

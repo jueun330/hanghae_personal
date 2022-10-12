@@ -45,15 +45,22 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         String refreshToken = jwtService
                 .extractRefreshToken(request)
                 .filter(jwtService::isTokenValid)
-                .orElse(null); //2
+                .orElse(null); // RefreshToken이 없거나 유효하지 않다면 null을 반환합니다.
 
 
         if(refreshToken != null){
-            checkRefreshTokenAndReIssueAccessToken(response, refreshToken);//3
+            checkRefreshTokenAndReIssueAccessToken(response, refreshToken);//refreshToken이 유효하다면 해당 refreshToken을 가진 유저정보를 찾아오고, 존재한다면 AccessToken을 재발급합니다.
+                                                                            //이때 바로 return시키는데, 그 이유는 refreshToken만 보낸 경우에는 인증을 처리하지 않게 하기 위해서입니다.
             return;
         }
 
-        checkAccessTokenAndAuthentication(request, response, filterChain);//4
+        checkAccessTokenAndAuthentication(request, response, filterChain);//refreshToken이 없다면 AccessToken을 검사하는 로직을 수행합니다.
+
+        //request에서 AccessToken을 추출한 후, 있다면 해당 AccessToken에서 username을 추출합니다.
+
+        //username이 추출되었다면 해당 회원을 찾아와서 그 정보를 가지고 인증처리를 합니다.
+
+       // 이때 SecurityContextHolder에 Authentication 객체를 만들어 반환하는데, NullAuthoritiesMapper가 쓰입니다.
 
     }
 
@@ -97,7 +104,5 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         memberRepository.findByRefreshToken(refreshToken).ifPresent(
                 member -> jwtService.sendAccessToken(response, jwtService.createAccessToken(member.getUsername()))
         );
-
-
     }
 }

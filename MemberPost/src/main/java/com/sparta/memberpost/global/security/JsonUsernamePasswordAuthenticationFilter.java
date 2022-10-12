@@ -1,6 +1,9 @@
 package com.sparta.memberpost.global.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.memberpost.domain.member.Member;
+import com.sparta.memberpost.domain.member.MemberSignupDto;
+import com.sparta.memberpost.global.response.SingleResponse;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -8,10 +11,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -54,7 +59,8 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
         String password = usernamePasswordMap.get(PASSWORD_KEY);
 
         UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);//principal 과 credentials 전달
-
         return this.getAuthenticationManager().authenticate(authRequest);
+
     }
+
 }

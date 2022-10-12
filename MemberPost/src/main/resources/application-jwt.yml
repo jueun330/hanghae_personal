@@ -2,7 +2,7 @@ jwt:
   secret: asjfas8dfaekjaklefa8f8as8df7asdf7asdfjasdf89asdf79asdfasd9fa00asd6fa78sdf6a7f6as8d7fa6sdf8776
 
   access:
-    expiration: 80
+    expiration: 20000
     header: Authorization
 
   refresh:

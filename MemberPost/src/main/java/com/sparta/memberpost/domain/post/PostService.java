@@ -4,13 +4,14 @@ import java.util.List;
 
 public interface PostService {
 
-     void save(PostSaveDto postSaveDto);
+     Post save(PostSaveDto postSaveDto);
 
 
-    void update(Long id, PostSaveDto postSaveDto);
+
+    Post update(Long id, PostSaveDto postSaveDto);
 
 
-    void delete(Long id);
+    Post delete(Long id);
 
 
     PostInfoDto getPostInfo(Long id);

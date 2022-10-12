@@ -9,6 +9,10 @@ public interface JwtService {
     String createAccessToken(String username);
     String createRefreshToken();
 
+    void updateRefreshToken(String username, String refreshToken);
+
+    void destroyRefreshToken(String username);
+
 
     void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken);
     void sendAccessToken(HttpServletResponse response, String accessToken);

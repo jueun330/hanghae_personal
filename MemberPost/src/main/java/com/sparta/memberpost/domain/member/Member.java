@@ -1,15 +1,16 @@
 package com.sparta.memberpost.domain.member;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.memberpost.domain.comment.Comment;
 import com.sparta.memberpost.domain.post.Post;
 import com.sparta.memberpost.global.Timestamped;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.sparta.memberpost.domain.member.Role;
+import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import static javax.persistence.CascadeType.ALL;
 @Entity
 @Getter
 @Table(name="Members")
-public class Member extends Timestamped {
+public class Member extends Timestamped implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name="member_id")
@@ -31,9 +32,14 @@ public class Member extends Timestamped {
     private String username;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
-
+    @Enumerated(EnumType.STRING)
+    @JsonIgnore
+    @Column
+    private Role role;
     public void encodePassword(PasswordEncoder passwordEncoder){
+
         this.password = passwordEncoder.encode(password);
     }
 
@@ -47,7 +53,6 @@ public class Member extends Timestamped {
     @Builder.Default
     @OneToMany(mappedBy = "writer", cascade = ALL, orphanRemoval = true)
     private List<Comment> commentList = new ArrayList<>();
-
 
     public void addPost(Post post){
         postList.add(post);
@@ -73,6 +78,9 @@ public class Member extends Timestamped {
      */
     public boolean matchPassword(PasswordEncoder passwordEncoder, String checkPassword){
         return passwordEncoder.matches(checkPassword, getPassword());
+    }
+    public void addUserAuthority() {
+        this.role = Role.USER;
     }
 
 }

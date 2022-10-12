@@ -16,13 +16,15 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public void signUp(MemberSignupDto memberSignUpDto) throws Exception {
+    public Member signUp(MemberSignupDto memberSignUpDto) throws Exception {
         Member member = memberSignUpDto.toEntity();
+        member.addUserAuthority();
         member.encodePassword(passwordEncoder);
         if(memberRepository.findByUsername(memberSignUpDto.getUsername()).isPresent()){
             throw new MemberException(MemberExceptionType.ALREADY_EXIST_USERNAME);
         }
-
         memberRepository.save(member);
+        return member;
+
     }
 }
