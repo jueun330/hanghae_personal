@@ -39,7 +39,7 @@ public class Post extends Timestamped {
 
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<Comment> commentList = new ArrayList<>();
+    private List<Comment> commentList;
 
 
     public void confirmWriter(Member writer) {

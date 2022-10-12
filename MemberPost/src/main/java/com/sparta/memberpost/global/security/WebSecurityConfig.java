@@ -8,6 +8,7 @@ import com.sparta.memberpost.domain.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -18,6 +19,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+
+import java.net.http.HttpRequest;
 
 
 @Configuration
@@ -51,11 +54,14 @@ public class WebSecurityConfig  {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/h2-console/*").permitAll()
+//                .antMatchers(HttpMethod.GET , "/h2-console/login/*").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/post/list").permitAll()
                 .antMatchers("/post/{id}").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest()
+                .authenticated();
 
 
         http.addFilterAfter(jsonUsernamePasswordLoginFilter(), LogoutFilter.class);
