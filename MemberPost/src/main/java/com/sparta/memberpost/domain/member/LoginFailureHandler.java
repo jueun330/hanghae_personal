@@ -3,6 +3,7 @@ package com.sparta.memberpost.domain.member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,4 +21,7 @@ public class LoginFailureHandler extends SimpleUrlAuthenticationFailureHandler {
         response.getWriter().write("fail");
         log.info("로그인에 실패했습니다");
     }
+
 }
+
+
